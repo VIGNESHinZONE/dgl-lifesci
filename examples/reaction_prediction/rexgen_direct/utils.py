@@ -556,7 +556,6 @@ def prepare_reaction_center(args, reaction_center_config):
                                 collate_fn=collate_center, shuffle=False)
 
         print('Stage 2/3: Performing model prediction...')
-        output_strings = []
         for batch_id, batch_data in enumerate(dataloader):
             print('Computing candidate bonds for batch {:d}/{:d}'.format(
                 batch_id + 1, len(dataloader)))
@@ -568,6 +567,7 @@ def prepare_reaction_center(args, reaction_center_config):
                     batch_mol_graphs, batch_complete_graphs)
             batch_size = len(batch_reactions)
             start = 0
+            output_strings = []
             for i in range(batch_size):
                 end = start + batch_complete_graphs.batch_num_edges()[i].item()
                 output_strings.append(output_candidate_bonds_for_a_reaction(
@@ -576,10 +576,9 @@ def prepare_reaction_center(args, reaction_center_config):
                 ))
                 start = end
 
-        print('Stage 3/3: Output candidate bonds...')
-        with open(path_to_candidate_bonds[subset], 'w') as f:
-            for candidate_string in output_strings:
-                f.write(candidate_string)
+            with open(path_to_candidate_bonds[subset], 'a') as f:
+                for candidate_string in output_strings:
+                    f.write(candidate_string)
 
         del dataset
         del dataloader
