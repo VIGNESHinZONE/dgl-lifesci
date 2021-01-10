@@ -543,7 +543,7 @@ def prepare_reaction_center(args, reaction_center_config):
             continue
 
         print('Processing subset {}...'.format(subset))
-        print('Stage 1/3: Loading dataset...')
+        print('Stage 1/2: Loading dataset...')
         if args['{}_path'.format(subset)] is None:
             dataset = USPTOCenter(subset, num_processes=args['num_processes'])
         else:
@@ -555,7 +555,7 @@ def prepare_reaction_center(args, reaction_center_config):
         dataloader = DataLoader(dataset, batch_size=args['reaction_center_batch_size'],
                                 collate_fn=collate_center, shuffle=False)
 
-        print('Stage 2/3: Performing model prediction...')
+        print('Stage 2/2: Performing model prediction...')
         for batch_id, batch_data in enumerate(dataloader):
             print('Computing candidate bonds for batch {:d}/{:d}'.format(
                 batch_id + 1, len(dataloader)))
